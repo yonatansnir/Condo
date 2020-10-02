@@ -9,6 +9,9 @@ const server = require('http').createServer(app);
 app.use(cors());
 app.use(express.json());
 
+// MongoDB
+const connectDB = require('./db');
+connectDB();
 
 const port = process.env.PORT
 server.listen(
