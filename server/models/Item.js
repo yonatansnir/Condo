@@ -1,9 +1,9 @@
 const mongoose = require('mongoose')
 const ItemSchema = new mongoose.Schema({
-    // itemID: {
-    //     type: String,
-    //     default: Schema.Types.ObjectId,
-    // },
+    itemID: {
+        type: String,
+        default: Schema.Types.ObjectId,
+    },
     itemName: {
         type: String,
         required: true,
