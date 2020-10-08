@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-
+// You don't have write this function at all.
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI, {
@@ -17,4 +17,6 @@ const connectDB = async () => {
   }
 };
 
-module.exports = connectDB;
+connectDB();
+
+// You don't really need to export this function.

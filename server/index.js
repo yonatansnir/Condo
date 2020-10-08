@@ -1,3 +1,9 @@
 require('dotenv').config();
+const app = require('./config/server').app;
 
-require('./config/server');
+// Connction to the DB >
+require('./config/db');
+
+// Routes
+const itemsRouter = require('./routes/items');
+app.use('/items', itemsRouter)
