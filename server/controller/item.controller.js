@@ -15,9 +15,9 @@ itemController.getAllItems = async (req, res) => {
 
 itemController.createItem = async (req, res) => {
     const item = new Item({
-        itemName: req.body.itemName,
-        itemColor: req.body.itemColor,
-        itemStock: req.body.itemStock
+        name: req.body.name,
+        color: req.body.color,
+        stock: req.body.stock
     })
     try {
         const newItem = await item.save()
@@ -53,14 +53,14 @@ itemController.getSpecificItem = (req, res) => {
 }
 
 itemController.updateSpecificItem = async (req, res) => {
-    if (req.body.itemName != null) {
-        res.item.itemName = req.body.itemName
+    if (req.body.name != null) {
+        res.item.name = req.body.name
     }
-    if (req.body.itemColor != null) {
-        res.item.itemColor = req.body.itemColor
+    if (req.body.color != null) {
+        res.item.color = req.body.color
     }
-    if (req.body.itemStock != null) {
-        res.item.itemStock = req.body.itemStock
+    if (req.body.stock != null) {
+        res.item.stock = req.body.stock
     }
     try {
         const updatedItem = await res.item.save()
