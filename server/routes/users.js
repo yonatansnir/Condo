@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken')
 const {check,validationResult}=require('express-validator')
 const User = require('../models/User')
 const auth = require('../middleware/auth')
-require('dotenv').config();
 
 
 router.get('/',auth,async (req,res)=>{
