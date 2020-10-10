@@ -8,6 +8,7 @@ require('./config/db');
 const itemsRouter = require('./routes/items');
 const userRouter = require('./routes/users');
 const authRoutes = require('./auth/authRoutes');
+
+app.use('/', authRoutes);
 app.use('/items', itemsRouter);
 app.use('/users', userRouter);
-app.use('/auth', authRoutes);

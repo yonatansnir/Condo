@@ -1,11 +1,11 @@
 const router = require('express').Router();
-const auth = require('../middleware/auth');
-const { getUser, getUserId, deleteUser } = require('../auth/userCrud');
+const { getUser, getUserId, deleteUser } = require('../controller/user.controller');
+const { validation } = require('../auth/authFunctions');
 
 //! ALL CRUD routes here !!!
 
 // Get user
-router.get('/', auth, getUser);
+router.get('/', validation, getUser);
 
 // Delete user
 router.delete('/:id', [getUserId, deleteUser]);
