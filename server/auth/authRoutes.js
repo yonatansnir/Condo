@@ -1,8 +1,9 @@
 const router = require('express').Router();
-const { login } = require('./authFunctions');
+const { login, register } = require('./authFunctions');
 
-router.get('/login', login);
+router.post('/login', login);
+router.post('/register', register);
 
-router.get('/validation', );
+router.get('/validation');
 
 module.exports = router;

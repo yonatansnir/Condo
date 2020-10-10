@@ -1,12 +1,13 @@
 const router = require('express').Router();
-const auth = require('../middleware/auth')
-const {getUser,loginUser,registerUser} = require('../auth/userAuth')
+const auth = require('../middleware/auth');
+const { getUser, getUserId, deleteUser } = require('../auth/userCrud');
 
-// get user
-router.get('/',auth,getUser)
-// login user
-router.post('/login',loginUser)
-// Register User
-router.post('/register',registerUser)
+//! ALL CRUD routes here !!!
 
-module.exports=router;
+// Get user
+router.get('/', auth, getUser);
+
+// Delete user
+router.delete('/:id', [getUserId, deleteUser]);
+
+module.exports = router;
