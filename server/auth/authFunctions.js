@@ -11,6 +11,7 @@ exports.login = ([
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
+
     const { email, password } = req.body;
     try {
       let user = await User.findOne({ email });
@@ -33,6 +34,7 @@ exports.login = ([
     }
   });
 
+ // authorization: bearer token
 exports.validation = (req, res, next) => {
   let headAuth = req.headers['authorization'];
   let token = headAuth && headAuth.split(' ')[1];
