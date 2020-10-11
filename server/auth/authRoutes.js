@@ -1,9 +1,13 @@
 const router = require('express').Router();
-const { login, validation, register } = require('./authFunctions');
+const { login, validation } = require('./authFunctions');
 
 router.post('/login', login);
-router.post('/register', register);
 
-router.get('/validation');
+router.get('/validation', validation, (req, res) => {
+    res.json({
+        status: 'success',
+        user_data: req.user
+    })
+});
 
 module.exports = router;
