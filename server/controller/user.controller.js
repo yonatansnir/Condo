@@ -32,6 +32,43 @@ exports.getUser = async (req, res) => {
     res.status(500).send('Server error.');
   }
 };
+// Update User Details
+exports.updateUserDetails = async (req, res) => {
+  if (req.body.address != null) {
+    res.user.address = req.body.address;
+  }
+  if (req.body.fullName != null) {
+    res.user.fullName = req.body.fullName;
+  }
+  if (req.body.houseNumber != null) {
+    res.user.houseNumber = req.body.houseNumber;
+  }
+  if (req.body.city != null) {
+    res.user.city = req.body.city;
+  }
+  if (req.body.country != null) {
+    res.user.country = req.body.country;
+  }
+  if (req.body.phoneNumber != null) {
+    res.user.phoneNumber = req.body.phoneNumber;
+  }
+  if (req.body.postcode != null) {
+    res.user.postcode = req.body.postcode;
+  }
+  if (req.body.title != null) {
+    res.user.title = req.body.title;
+  }
+
+  try {
+    const updatedUser = await res.user.save();
+    // res.json(updatedUser);
+    res.json(newDetails);
+  } catch (err) {
+    res.status(404).json({
+      message: err.message,
+    });
+  }
+};
 
 // Delete User
 exports.deleteUser = async (req, res) => {

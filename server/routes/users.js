@@ -1,13 +1,20 @@
 const router = require('express').Router();
-const { getUser, getUserId, deleteUser } = require('../controller/user.controller');
+const {
+  getUser,
+  getUserId,
+  deleteUser,
+  updateUserDetails,
+} = require('../controller/user.controller');
 const { validation } = require('../auth/authFunctions');
 
 //! ALL CRUD routes here !!!
 
 // Get user
-router.get('/', validation, getUser);
+router.get('/', [validation, getUser]);
 
+// Update user details
+router.patch('/update/:id', [getUserId, updateUserDetails]);
 // Delete user
-router.delete('/:id', [getUserId, deleteUser]);
+router.delete('/delete/:id', [getUserId, deleteUser]);
 
 module.exports = router;
