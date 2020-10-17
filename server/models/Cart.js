@@ -3,14 +3,14 @@ const CartSchema = new mongoose.Schema({
   user: {
     // *This connect the user to his Cart.
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'user',
   },
   items: [
     // *This will hold all the items that the user add to his cart.
     {
       item: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Item',
+        ref: 'item',
       },
     },
   ],
