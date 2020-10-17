@@ -19,8 +19,8 @@ const ItemSchema = new mongoose.Schema({
     required: true,
   },
   color: {
-    //   example : rgb(115,120,220)
-    type: String,
+    //   example : rgb(115,120,220), #fff etc...
+    type: [String],
     required: true,
   },
   quantity: {
@@ -33,46 +33,48 @@ const ItemSchema = new mongoose.Schema({
   },
   shipping: [
     {
-      dimensions: [
-        {
-          height: {
-            type: Number,
-            required: true,
-          },
-          length: {
-            type: Number,
-            required: true,
-          },
-          width: {
-            type: Number,
-            required: true,
-          },
-        },
-      ],
-      weight: {
+      // dimensions: [  # i want use like this and i can't save the data in mongoDB
+      //   {
+      itemHeight: {
         type: Number,
         required: true,
       },
+      itemLength: {
+        type: Number,
+        required: true,
+      },
+      itemWidth: {
+        type: Number,
+        required: true,
+      },
+      itemWeight: {
+        type: Number,
+        required: true,
+      },
+      //   },
+      //   // ],
+      // },
+      // {
     },
   ],
   assets: [
     {
-      images: [
-        {
-          height: {
-            type: Number,
-            required: true,
-          },
-          width: {
-            type: Number,
-            required: true,
-          },
-          src: {
-            type: String,
-            required: true,
-          },
-        },
-      ],
+      // images: [ # i want use like this and i can't save the data in mongoDB
+      //   {
+      imgHeight: {
+        type: Number,
+        required: true,
+      },
+      imgWidth: {
+        type: Number,
+        required: true,
+      },
+      imgSrc: {
+        type: String,
+        required: true,
+      },
+      //     },
+      //   ],
     },
   ],
 });
