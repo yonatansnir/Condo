@@ -31,10 +31,8 @@ const ItemSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  shipping: [
-    {
-      // dimensions: [  # i want use like this and i can't save the data in mongoDB
-      //   {
+  productDimensions: {
+    dimensions: {
       itemHeight: {
         type: Number,
         required: true,
@@ -47,36 +45,30 @@ const ItemSchema = new mongoose.Schema({
         type: Number,
         required: true,
       },
-      itemWeight: {
-        type: Number,
-        required: true,
-      },
-      //   },
-      //   // ],
-      // },
-      // {
     },
-  ],
-  assets: [
-    {
-      // images: [ # i want use like this and i can't save the data in mongoDB
-      //   {
-      imgHeight: {
-        type: Number,
-        required: true,
-      },
-      imgWidth: {
-        type: Number,
-        required: true,
-      },
-      imgSrc: {
-        type: String,
-        required: true,
-      },
-      //     },
-      //   ],
+    itemWeight: {
+      type: Number,
+      required: true,
     },
-  ],
+  },
+  assets: {
+    images: [
+      {
+        imgHeight: {
+          type: Number,
+          required: true,
+        },
+        imgWidth: {
+          type: Number,
+          required: true,
+        },
+        imgSrc: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+  },
 });
 
 const Item = mongoose.model('item', ItemSchema);

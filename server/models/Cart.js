@@ -14,26 +14,24 @@ const CartSchema = new mongoose.Schema({
       },
     },
   ],
-  price: [
-    {
-      totalItemsPrice: {
-        type: Number,
-        required: true,
-      },
-      discount: {
-        type: Number,
-        required: true,
-      },
-      shippingPrice: {
-        type: Number,
-        required: true,
-      },
-      finalPrice: {
-        type: Number,
-        required: true,
-      },
+  price: {
+    totalItemsPrice: {
+      type: Number,
+      required: true,
     },
-  ],
+    discount: {
+      type: Number,
+      required: true,
+    },
+    shippingPrice: {
+      type: Number,
+      required: true,
+    },
+    finalPrice: {
+      type: Number,
+      required: true,
+    },
+  },
 });
 
 const Cart = mongoose.model('cart', CartSchema);

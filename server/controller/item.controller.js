@@ -26,9 +26,7 @@ itemController.createItem = async (req, res) => {
     itemLength,
     itemWidth,
     itemWeight,
-    imgHeight,
-    imgWidth,
-    imgSrc,
+    images,
   } = req.body;
 
   // Build items object
@@ -43,59 +41,34 @@ itemController.createItem = async (req, res) => {
   if (quantity) itemFields.quantity = quantity;
   if (price) itemFields.price = price;
 
-  // Build shipping dimensions object
-  //   itemFields.shipping = {};
-  //   itemFields.shipping = [{}];
-  //   if (itemWeight) itemFields.shipping.itemWeight = itemWeight;
-
-  //   itemFields.shipping.dimensions = [{}];
-  //   if (itemHeight) itemFields.shipping.dimensions.itemHeight = itemHeight;
-  //   if (itemLength) itemFields.shipping.dimensions.itemLength = itemLength;
-  //   if (itemWidth) itemFields.shipping.dimensions.itemWidth = itemWidth;
-
+  // Build product dimensions object
   itemFields.shipping = {};
-  if (itemHeight) itemFields.shipping.itemHeight = itemHeight;
-  if (itemLength) itemFields.shipping.itemLength = itemLength;
-  if (itemWidth) itemFields.shipping.itemWidth = itemWidth;
-  if (itemWeight) itemFields.shipping.itemWeight = itemWeight;
+  itemFields.shipping.productDimensions = {};
+
+  if (itemHeight)
+    itemFields.productDimensions.dimensions.itemHeight = itemHeight;
+  if (itemLength)
+    itemFields.productDimensions.dimensions.itemLength = itemLength;
+  if (itemWidth) itemFields.productDimensions.dimensions.itemWidth = itemWidth;
+  if (itemWeight) itemFields.productDimensions.itemWeight = itemWeight;
 
   //   Build assets images object
   itemFields.assets = {};
-  //   itemFields.assets.images = [{}];
-  //   if (imgHeight) itemFields.assets.images.imgHeight = imgHeight;
-  //   if (imgWidth) itemFields.assets.images.imgWidth = imgWidth;
-  //   if (imgSrc) itemFields.assets.images.imgSrc = imgSrc;
-  if (imgHeight) itemFields.assets.imgHeight = imgHeight;
-  if (imgWidth) itemFields.assets.imgWidth = imgWidth;
-  if (imgSrc) itemFields.assets.imgSrc = imgSrc;
-
+  itemFields.assets.images = [];
+  for (imageInImages of images) {
+    const { imgWidth, imgHeight, imgSrc } = imageInImages;
+    itemFields.assets.images.push(imageInImages);
+  }
   //   Create item
   try {
     item = new Item(itemFields);
     await item.save();
-    res.status(201).json(item);
+    res.status(201).json({ item });
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server Error');
   }
 };
-
-/* itemController.createItem = async (req, res) => {
-    const item = new Item({
-        name: req.body.name,
-        color: req.body.color,
-        stock: req.body.stock
-    })
-    try {
-        const newItem = await item.save()
-        res.status(201).json(newItem)
-    } catch (err) {
-        res.status(400).json({
-            message: err.message
-        })
-
-    }
-} */
 
 itemController.getById = async (req, res, next) => {
   let item;
