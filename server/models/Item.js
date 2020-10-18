@@ -9,12 +9,7 @@ const ItemSchema = new mongoose.Schema({
     required: true,
   },
   category: {
-    //   Men / Women / Kids etc...
-    type: String,
-    required: true,
-  },
-  brand: {
-    //   New / Used / Old etc...
+    //   Men / Women / Kids / Unisex etc...
     type: String,
     required: true,
   },
