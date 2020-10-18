@@ -30,20 +30,16 @@ const ItemSchema = new mongoose.Schema({
     dimensions: {
       itemHeight: {
         type: Number,
-        required: true,
       },
       itemLength: {
         type: Number,
-        required: true,
       },
       itemWidth: {
         type: Number,
-        required: true,
       },
     },
     itemWeight: {
       type: Number,
-      required: true,
     },
   },
   assets: {
@@ -51,15 +47,12 @@ const ItemSchema = new mongoose.Schema({
       {
         imgHeight: {
           type: Number,
-          required: true,
         },
         imgWidth: {
           type: Number,
-          required: true,
         },
         imgSrc: {
           type: String,
-          required: true,
         },
       },
     ],

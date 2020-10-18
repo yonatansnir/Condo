@@ -1,9 +1,13 @@
+const { findOne } = require('../models/User');
+const { responseWithError, validateDate } = require('../common/helper');
+const { generateAccessToken } = require('../auth/authFunctions');
+const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
 exports.getAllUsers = async (req, res) => {
   let users = await User.find();
   res.json(users);
-}
+};
 // Find user ID
 exports.getUserId = async (req, res, next) => {
   let user;
@@ -28,7 +32,9 @@ exports.getUser = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
     if (user == null) {
-      return res.status(404).json({ message: 'User do not exits' });
+      return res.status(404).json({
+        message: 'User do not exits',
+      });
     }
     res.json(user);
   } catch (err) {
@@ -88,79 +94,91 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
-// exports.register =
-//   // insert here all the register logic
-//   ([
-//     check('fullName', 'Full Name is require.').not().isEmpty(),
-//     check('email', 'Please include a valid email.').isEmail(),
-//     check(
-//       'password',
-//       'Please enter password with 6 or more characters.'
-//     ).isLength({
-//       min: 6,
-//     }),
-//   ],
-//   async (req, res) => {
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//       return res.status(400).json({ errors: errors.array() });
-//     }
+// Register User
+exports.registerNewUser = async (req, res) => {
+  let input = {};
+  // { a: 1, b: 2, c: 3 } // [ 'a', 'b', 'c' ] //
+  // req.body ? req.body[key] : null
+  Object.keys(req.body).forEach((key, i) => {
+    if (typeof req.body[key] === 'object') return (input[key] = req.body[key]);
 
-//     const {
-//       fullName,
-//       email,
-//       password,
-//       houseNumber,
-//       address,
-//       city,
-//       country,
-//       phoneNumber,
-//       dateOfBirth,
-//       postcode,
-//       title,
-//     } = req.body;
-//     try {
-//       let user = await User.findOne({ email });
-//       if (user) {
-//         return res
-//           .status(400)
-//           .json({ error: [{ msg: 'User already exists.' }] });
-//       }
+    let value = req.body[key] && req.body[key].toString().trim();
+    input[key] = value;
+  });
 
-//       user = new User({
-//         fullName,
-//         email,
-//         password,
-//         houseNumber,
-//         address,
-//         city,
-//         country,
-//         phoneNumber,
-//         dateOfBirth,
-//         postcode,
-//         title,
-//       });
+  // All the fields with require.
+  // Use for the `key's`.
+  const requiredFields = [
+    'fullName',
+    'email',
+    'password',
+    'passwordValidation',
+    'address',
+    'phoneNumber',
+    'dateOfBirth',
+    'title',
+  ];
 
-//       const salt = await bcrypt.genSalt(10);
-//       user.password = await bcrypt.hash(password, salt);
-//       await user.save();
+  const {
+    fullName,
+    email,
+    password,
+    passwordValidation,
+    phoneNumber,
+    address,
+    dateOfBirth,
+    title,
+  } = input;
 
-//       const payload = {
-//         user: {
-//           id: user.id,
-//         },
-//       };
-//       jwt.sign(
-//         payload,
-//         process.env.JWTSECRET,
-//         { expiresIn: 360000 },
-//         (err, token) => {
-//           if (err) throw err;
-//           res.json({ token });
-//         }
-//       );
-//     } catch (err) {
-//       console.error(err.message);
-//       res.status(500).send('Server error');
-//     }
-//   });
+  // Validation
+  try {
+    requiredFields.forEach((field) => {
+      if (!input[field])
+        throw Error('All fields are required.' + input[field] + '' + field);
+    });
+
+    if (
+      !address.country ||
+      !address.city ||
+      !address.street ||
+      !address.houseNumber ||
+      !address.postalCode
+    )
+      throw Error('All fields are required.');
+    const nameRegex = new RegExp(/^[a-zA-Z]+$/);
+    if (!nameRegex.test(fullName)) throw Error('Name must be only letters.');
+
+    const emailRegex = new RegExp(
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+
+    if (!emailRegex.test(email))
+      throw Error('Please provide valid email address.');
+
+    if (password !== passwordValidation) throw Error('Password do not match.');
+    // if(password.length > 6 && )
+
+    const phoneRegex = new RegExp(/^(()?\d{3}())?(-|\s)?\d{3}(-|\s)?\d{4}$/);
+
+    if (!phoneRegex.test(phoneNumber))
+      throw Error('Please Provide valid phone number.');
+
+    // Date of birth must be yyyy-mm-dd
+    const [y, m, d] = dateOfBirth.split('-');
+    if (!validateDate(y, m, d)) throw Error('Please provide valid date.');
+
+    const mailAlreadyInUse = await User.findOne({ email });
+    if (mailAlreadyInUse) throw Error('Mail already in use.');
+
+    const user = new User({
+      ...input,
+      ...address,
+    });
+
+    await user.save();
+    const token = generateAccessToken(user.id);
+    res.status(200).json({ user, token });
+  } catch (error) {
+    return responseWithError(res, 400, [error.message]);
+  }
+};
