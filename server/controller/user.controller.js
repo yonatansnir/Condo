@@ -97,6 +97,7 @@ exports.deleteUser = async (req, res) => {
 // Register User
 exports.registerNewUser = async (req, res) => {
   let input = {};
+
   // { a: 1, b: 2, c: 3 } // [ 'a', 'b', 'c' ] //
   // req.body ? req.body[key] : null
   Object.keys(req.body).forEach((key, i) => {
@@ -134,7 +135,7 @@ exports.registerNewUser = async (req, res) => {
   try {
     requiredFields.forEach((field) => {
       if (!input[field])
-        throw Error('All fields are required.' + input[field] + '' + field);
+        throw Error('All fields are required.' + input[field] + ' ' + field);
     });
 
     if (
@@ -145,6 +146,7 @@ exports.registerNewUser = async (req, res) => {
       !address.postalCode
     )
       throw Error('All fields are required.');
+
     const nameRegex = new RegExp(/^[a-zA-Z]+$/);
     if (!nameRegex.test(fullName)) throw Error('Name must be only letters.');
 
@@ -168,7 +170,7 @@ exports.registerNewUser = async (req, res) => {
     if (!validateDate(y, m, d)) throw Error('Please provide valid date.');
 
     const mailAlreadyInUse = await User.findOne({ email });
-    if (mailAlreadyInUse) throw Error('Mail already in use.');
+    if (mailAlreadyInUse) throw Error('Email already in use.');
 
     const user = new User({
       ...input,
