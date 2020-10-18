@@ -1,14 +1,10 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+
 const UserSchema = new mongoose.Schema({
   fullName: {
-    firstName: {
-      type: String,
-      required: true,
-    },
-    lastName: {
-      type: String,
-      required: true,
-    },
+    type: String,
+    required: true,
   },
   email: {
     type: String,
@@ -17,6 +13,7 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+    select: false,
   },
   address: {
     country: {
@@ -35,7 +32,7 @@ const UserSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
-    postcode: {
+    postalCode: {
       type: String,
       required: true,
     },
@@ -55,6 +52,17 @@ const UserSchema = new mongoose.Schema({
     required: true,
   },
 });
+
+UserSchema.pre('save', function (next) {
+  if (this.isModified('password')) {
+    this.password = bcrypt.hashSync(this.password, bcrypt.genSaltSync());
+    next();
+  }
+});
+
+UserSchema.methods.comparePassword = function (password) {
+  return bcrypt.compareSync(password, this.password);
+};
 
 const User = mongoose.model('user', UserSchema);
 module.exports = User;
